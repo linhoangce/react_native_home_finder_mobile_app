@@ -11,7 +11,7 @@ interface UseAppwriteReturn<T, P> {
     data: T | null;
     loading: boolean;
     error: string | null;
-    refetch: (newParams: P) => Promise<void>;
+    refetch: (newParams?: P) => Promise<void>;
 }
 
 export const useAppwrite = <T, P extends Record<string, string | number>>({
@@ -32,7 +32,8 @@ export const useAppwrite = <T, P extends Record<string, string | number>>({
                 const result = await fn(fetchParams);
                 setData(result);
             } catch (err: unknown) {
-                const errorMessage = err instanceof Error ? err.message : "An unknown error occured";
+                const errorMessage = err instanceof Error ? err.message : "An unknown error" +
+                    " occurred";
                 setError(errorMessage);
                 Alert.alert(errorMessage);
             } finally {
@@ -48,7 +49,7 @@ export const useAppwrite = <T, P extends Record<string, string | number>>({
         }
     }, []);
 
-    const refetch = async (newParams: P) => await fetchData(newParams);
+    const refetch = async (newParams?: P) => await fetchData(newParams || params);
 
     return {data, loading, error, refetch};
 }
